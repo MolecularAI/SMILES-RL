@@ -68,7 +68,7 @@ Below is an example of such file using the diversity filter and scoring function
             "batch_size": 128,
             "learning_rate": 0.0001,
             "n_steps": 3000,
-            "prior": "random.prior.new", # e.g., path to initial critic if actor and critic is not the same
+            "prior": "random.prior.new",
             "specific_parameters": {
                 "margin_threshold": 50,
                 "sigma": 128
