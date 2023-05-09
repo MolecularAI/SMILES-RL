@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black) 
 
-SMILES-RNN-RL is a framework for comparing reinforcement learning algorithms, replay buffers and scoring functions for SMILES-based molecular *de novo* design. The framework is originally developed for recurrent neural netrworks (RNNs) but can be used with other models as well.
+SMILES-RL is a framework for comparing reinforcement learning algorithms, replay buffers and scoring functions for SMILES-based molecular *de novo* design. The framework is originally developed for recurrent neural netrworks (RNNs) but can be used with other models as well.
 
 ## Prerequisites
 Before you begin, ensure you have met the following requirements:
