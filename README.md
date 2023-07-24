@@ -164,4 +164,4 @@ List of current agents and replay buffer combinations.
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | N/A                | N/A                | N/A                |
 
 ## References
-1. Svensson, Hampus G., Tyrchan, Christian, Engkvist, Ola, and Morteza H. Chehreghani. "Utilizing Reinforcement Learning for de novo Drug Design." ArXiv, (2023).
+1. Hampus Gummesson Svensson, Christian Tyrchan, Ola Engkvist, Morteza Haghir Chehreghani. "Utilizing Reinforcement Learning for de novo Drug Design." ArXiv, (2023).
