@@ -1,10 +1,6 @@
 import os
 import json
-from utils.logging import new_version_dir
-
 import argparse
-
-from typing import Optional
 
 
 def main():
@@ -12,16 +8,17 @@ def main():
     # Get arguments
     args = _get_arguments()
 
-    # Creates and returns a next version directory where config and output files will be stored
-    root_dir = "outputs/regularized_mle/"
-    log_dir = new_version_dir(root_dir)
+    log_dir = args.log_dir
 
-    prior_model_path = os.path.expanduser("pre_trained_models/ChEMBL/random.prior.new")
+    prior_model_path = args.prior
+
+    predictive_model_path = args.predictive_model
 
     # Create json config file
     config_json = _create_json_config(
         prior_model_path,
         log_dir,
+        predictive_model_path,
         replay_buffer=args.replay_buffer,
         use_diversity_filter=True,
     )
@@ -46,6 +43,26 @@ def _get_arguments() -> argparse.Namespace:
         type=str,
         help="Absolute/relative path to replay buffer for import",
     )
+    parser.add_argument(
+        "--log_dir",
+        required=True,
+        type=str,
+        help="Logging directory for saving config file",
+    )
+
+    parser.add_argument(
+        "--prior",
+        required=True,
+        type=str,
+        help="Path to pre-trained model",
+    )
+
+    parser.add_argument(
+        "--predictive_model",
+        required=True,
+        type=str,
+        help="Path to predictive model",
+    )
 
     args = parser.parse_args()
 
@@ -55,6 +72,7 @@ def _get_arguments() -> argparse.Namespace:
 def _create_json_config(
     prior_model_path,
     output_dir,
+    model_path,
     replay_buffer: str,
     use_diversity_filter: bool = True,
     n_steps: int = 2000,
@@ -63,8 +81,6 @@ def _create_json_config(
 ):
 
     results_dir = os.path.join(output_dir, "results")
-
-    model_path = os.path.expanduser("predictive_models/DRD2/RF_DRD2all_ecfp4c.pkl")
 
     configuration = {}
 
@@ -91,9 +107,9 @@ def _create_json_config(
                 "name": "IdenticalMurckoScaffold",  # other options are: "IdenticalTopologicalScaffold",
                 #                    "NoFilter" and "ScaffoldSimilarity"
                 # -> use "NoFilter" to disable this feature
-                "bucket_size": 25,  # 25, # the bin size; penalization will start once this is exceeded; nbmax in v2.0, bucket_size in Reinvent 3.0
-                "minscore": 0.4,  # 0.4 # the minimum total score to be considered for binning
-                "minsimilarity": 0.35,  # 0.4,  # the minimum similarity to be placed into the same bin # Should be 0.35 for ECFP4
+                "bucket_size": 25,  # the bin size; penalization will start once this is exceeded
+                "minscore": 0.4,  # the minimum total score to be considered for binning
+                "minsimilarity": 0.35,  # the minimum similarity to be placed into the same bin
             },
         }
     else:
@@ -110,7 +126,7 @@ def _create_json_config(
         "parameters": {
             "prior": prior_model_path,  # path to the pre-trained model
             "agent": prior_model_path,  # path to a second pre-trained model
-            "n_steps": n_steps,  # the number of epochs (steps) to be performed; often 1000
+            "n_steps": n_steps,  # the number of epochs (steps) to be performed
             "learning_rate": 0.0001,  # sets how strongly the agent is influenced by each epoch
             "batch_size": batch_size,  # specifies how many molecules are generated per epoch
             "specific_parameters": {
@@ -151,7 +167,7 @@ def _create_json_config(
                         "transformation": {"transformation_type": "no_transformation"},
                         "descriptor_type": "ecfp_counts",  # sets the input descriptor for this model
                         "size": 2048,  # parameter of descriptor type
-                        "radius": 2,  # parameter of descriptor type # default DRD2 is trained using radius 3.
+                        "radius": 2,  # parameter of descriptor type
                         "use_counts": True,  # parameter of descriptor type
                         "use_features": True,  # parameter of descriptor type
                     },
