@@ -175,7 +175,7 @@ class BinHistory(BaseReplayBuffer):
 
         Args:
             smiles (List[str]): SMILES strings
-            score (np.ndarray): Score of each SMILES [batch_size, ] 
+            score (np.ndarray): Score of each SMILES [batch_size, ]
             probs (np.ndarray): Probability for each action at each state in sequence [batch_size, sequence_length, n_actions]
             seqs (torch.Tensor): Sequence. Used for determing how sequence lenght of probability array for each sequence. [batch_size, seq_len]
         """
@@ -197,7 +197,6 @@ class BinHistory(BaseReplayBuffer):
         )
 
         bins_memory = pd.cut(score, bins=bins)
-
 
         # Sequence lenghts for all smiles including start token but excluding stop token
         # If no stop token, sequence length is total lenght of sequence
@@ -249,7 +248,6 @@ class BinHistory(BaseReplayBuffer):
         Returns:
             Tuple[List[str], np.ndarray, torch.Tensor]: sampled bacth of SMILES, scores and probabilities
         """
-        
 
         batch_size = min(len(self), batch_size)
 
@@ -298,8 +296,7 @@ class BinHistory(BaseReplayBuffer):
         Returns:
             Tuple[List[str], np.ndarray]: Sampled SMILES strings and corresponding scores
         """
-        
-        
+
         batch_size = min(len(self), self.k)
 
         unique_bins = pd.unique(self.memory["bin"])
@@ -380,8 +377,7 @@ class BinHistory(BaseReplayBuffer):
         self.step += 1
 
     def _purge_memory_step(self):
-        """Purge memory of each bin, keeping the latest molecules.
-        """
+        """Purge memory of each bin, keeping the latest molecules."""
 
         self.memory.sort_values("step", ascending=False, inplace=True)
 

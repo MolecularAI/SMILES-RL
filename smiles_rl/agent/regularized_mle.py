@@ -18,7 +18,6 @@ import torch
 from reinvent_chemistry.logging import fraction_valid_smiles
 
 
-
 from ..utils.general import to_tensor
 
 from .utils.margin_guard import MarginGuard

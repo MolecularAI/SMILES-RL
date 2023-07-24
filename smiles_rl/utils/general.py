@@ -8,14 +8,13 @@ from typing import Union, Dict
 
 def to_tensor(tensor: Union[torch.Tensor, np.ndarray]) -> torch.Tensor:
     """Converts numpy ndarray to tensor and/or puts to GPU if available"""
-    
+
     if isinstance(tensor, np.ndarray):
         tensor = torch.from_numpy(tensor)
-        
+
     if torch.cuda.is_available():
         return tensor.cuda()
     return tensor
-    
 
 
 def set_default_device_cuda():
@@ -32,7 +31,7 @@ def set_default_device_cuda():
         return True
 
 
-def estimate_run_time(start_time: float, n_steps: int, step: int) -> Dict[str,float]:
+def estimate_run_time(start_time: float, n_steps: int, step: int) -> Dict[str, float]:
     """Estimate the remaining run time
 
     Args:

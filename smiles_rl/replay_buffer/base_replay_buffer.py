@@ -7,7 +7,7 @@ class BaseReplayBuffer(ABC):
         """Sample, and optionally put, elements from replay buffer
 
         Raises:
-            NotImplementedError: method is required in replay buffer 
+            NotImplementedError: method is required in replay buffer
         """
         raise NotImplementedError("__call__ method is not implemented")
 
@@ -16,6 +16,6 @@ class BaseReplayBuffer(ABC):
         """Number of elements currently stored in replay buffer
 
         Raises:
-            NotImplementedError: method is required in replay buffer 
+            NotImplementedError: method is required in replay buffer
         """
         raise NotImplementedError("__len__ method is not implemented")

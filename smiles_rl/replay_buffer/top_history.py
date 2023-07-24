@@ -124,7 +124,7 @@ class TopHistory(BaseReplayBuffer):
     ) -> None:
         """Put SMILES, and corresponding scores and probabilities in memory.
         Uses sequences to determine the lenght of the probability array to save.
-        It consists of a memory of the top-scoring SMILES (no duplicates). 
+        It consists of a memory of the top-scoring SMILES (no duplicates).
 
         Used by ACER.
 
@@ -186,7 +186,6 @@ class TopHistory(BaseReplayBuffer):
 
         sample_size = min(len(self), batch_size)
 
-
         sampled = self.memory.sample(sample_size, replace=False)
 
         smiles = sampled["smiles"].to_list()
@@ -203,10 +202,8 @@ class TopHistory(BaseReplayBuffer):
 
         return smiles, scores, probs
 
-
     def _purge_memory_off_policy(self):
-        """Purges memory. Used by the off-policy algorithms.
-        """
+        """Purges memory. Used by the off-policy algorithms."""
 
         sorted_df = self.memory.sort_values("score", ascending=False, kind="stable")
 
@@ -215,14 +212,13 @@ class TopHistory(BaseReplayBuffer):
 
         self.memory = unique_df.head(self.memory_size).reset_index(drop=True)
 
-
     def sample(self) -> Tuple[List[str], np.ndarray]:
         """Randomly samples batch of items from memory. Batch size = k.
 
         Returns:
             Tuple[List[str], np.ndarray]: k SMILES strings and corresponding scores
         """
-        
+
         sample_size = min(len(self), self.k)
 
         sampled = self.memory.sample(sample_size)
@@ -259,5 +255,3 @@ class TopHistory(BaseReplayBuffer):
         self.memory = pd.concat([self.memory, df]).reset_index(drop=True)
 
         self._purge_memory_off_policy()
-
-    

@@ -8,11 +8,11 @@ import torch
 class MarginGuard:
     """Margin guard for Regularized MLE.
 
-        Code from https://github.com/MolecularAI/Reinvent
-    
-    
+    Code from https://github.com/MolecularAI/Reinvent
+
+
     """
-    
+
     def __init__(self, runner, margin_window=10, desirable_min_score=0.15):
         self.runner = runner
         self.margin_window = margin_window

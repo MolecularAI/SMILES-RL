@@ -92,7 +92,7 @@ class LocalReinforcementLogger(BaseReinforcementLogger):
         self.save_filter_memory(scaffold_filter)
         self._summary_writer.close()
         self.log_out_input_configuration()
-        
+
     def save_intermediate_state(self, agent, scaffold_filter):
         agent.save_to_file(os.path.join(self._log_config.result_folder, "Agent.ckpt"))
         self.save_filter_memory(scaffold_filter)
@@ -124,7 +124,7 @@ class LocalReinforcementLogger(BaseReinforcementLogger):
         np.save(save_path_seqs, seqs.detach().cpu().numpy())
 
         np.save(save_path_probs, probs.detach().cpu().numpy())
-        
+
     def save_q_table_and_probabilities(
         self,
         q_values: torch.Tensor,

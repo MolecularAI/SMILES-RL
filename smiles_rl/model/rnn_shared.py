@@ -7,6 +7,7 @@ import torch.nn.functional as tnnf
 
 from typing import Optional
 
+
 class RNNShared(tnn.Module):
     """
     Implements a N layer GRU(M) cell including an embedding layer
@@ -16,12 +17,12 @@ class RNNShared(tnn.Module):
     def __init__(
         self,
         voc_size: int,
-        layer_size: int =512,
-        num_layers: int =3,
-        cell_type: str ="gru",
-        embedding_layer_size: int =256,
-        dropout: float =0.0,
-        layer_normalization: bool =False,
+        layer_size: int = 512,
+        num_layers: int = 3,
+        cell_type: str = "gru",
+        embedding_layer_size: int = 256,
+        dropout: float = 0.0,
+        layer_normalization: bool = False,
     ):
         """
         Implements a N layer GRU|LSTM cell including an embedding layer and an output linear layer back to the size of the
@@ -69,7 +70,9 @@ class RNNShared(tnn.Module):
 
         print(self)
 
-    def forward(self, input_vector: torch.Tensor, hidden_state: Optional[torch.Tensor] =None):  # pylint: disable=W0221
+    def forward(
+        self, input_vector: torch.Tensor, hidden_state: Optional[torch.Tensor] = None
+    ):  # pylint: disable=W0221
         """
         Performs a forward pass on the model. Note: you pass the **whole** sequence.
         :param input_vector: Input tensor (batch_size, seq_size).

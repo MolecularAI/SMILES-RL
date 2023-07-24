@@ -12,7 +12,7 @@ from dacite import from_dict
 
 class ReinventScoringFactory:
     def __new__(cls, config: ConfigurationEnvelope):
-        """Creates and return reinvent scoring function. 
+        """Creates and return reinvent scoring function.
 
         Args:
             config (ConfigurationEnvelope): configurations
@@ -23,7 +23,7 @@ class ReinventScoringFactory:
 
         scoring_parameters = from_dict(
             data_class=ScoringFunctionParameters,
-            data=config.scoring_function.parameters
+            data=config.scoring_function.parameters,
         )
 
         scoring_function = ScoringFunctionFactory(scoring_parameters)

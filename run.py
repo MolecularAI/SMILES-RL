@@ -94,6 +94,7 @@ def _read_json_file(path: str) -> Dict[str, Any]:
 
     return config
 
+
 def _construct_logger(config: ConfigurationEnvelope):
     """Creates logger instance
 

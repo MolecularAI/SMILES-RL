@@ -234,17 +234,16 @@ class TopBotHistory(BaseReplayBuffer):
 
         return smiles, scores, probs
 
-
     # TODO: following code can be merged into seperate replay buffer class.
     def sample(self) -> Tuple[List[str], np.ndarray]:
-        """Samples k SMILES strings and corresponding scores from memory. 
+        """Samples k SMILES strings and corresponding scores from memory.
         Used by SAC.
-        
+
 
         Returns:
             Tuple[List[str], np.ndarray]: sampled SMILES and scores
         """
-        
+
         sample_size = min(len(self), self.k)
 
         sampled = self.memory.sample(sample_size)
@@ -267,7 +266,6 @@ class TopBotHistory(BaseReplayBuffer):
             score (np.ndarray): batch of score [batch_size, ]
         """
 
-
         canon_smiles = convert_to_canonical_smiles(smiles)
 
         df = pd.DataFrame(
@@ -286,10 +284,9 @@ class TopBotHistory(BaseReplayBuffer):
         """Purges memory by first removing duplicate (keeping those with lowest score),
         then splits the memory into three seperate parts: high-scoring valid SMILES, low-scoring valid SMILES
         and invalid SMILES (reward/score = -1). Memory size for each part is equal, trying to keep an equal number in memory.
-        
+
         Used by ACER and SAC.
         """
-        
 
         sorted_df = self.memory.sort_values("score", ascending=False, kind="stable")
 

@@ -5,21 +5,22 @@ from typing import List
 from smiles_rl.configuration_envelope import ConfigurationEnvelope
 
 
-
-
-class BaseAgent(metaclass = ABCMeta):
-    """The agent should use the given scoring function, 
-        diversity filter, replay buffer for update. Logger should be used for saving agent parameters
-        and memory for intermediate and/or final inspection.
+class BaseAgent(metaclass=ABCMeta):
+    """The agent should use the given scoring function,
+    diversity filter, replay buffer for update. Logger should be used for saving agent parameters
+    and memory for intermediate and/or final inspection.
     """
-    
+
     @abstractmethod
-    def __init__(self,config: ConfigurationEnvelope,
+    def __init__(
+        self,
+        config: ConfigurationEnvelope,
         scoring_function,
         diversity_filter,
         replay_buffer,
-        logger,):
-        """Intializes agent. 
+        logger,
+    ):
+        """Intializes agent.
 
         Args:
             config (ConfigurationEnvelope): configuration
@@ -32,13 +33,12 @@ class BaseAgent(metaclass = ABCMeta):
             NotImplementedError: Method needs to be reimplemented
             in specific agent
         """
-        
-        
+
         self._scoring_function = scoring_function
         self._diversity_filter = diversity_filter
         self._replay_buffer = replay_buffer
         self._logger = logger
-    
+
     @abstractmethod
     def act(self, batch_size: int) -> List[str]:
         """Sample SMILES strings
