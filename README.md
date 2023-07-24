@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black) 
 
-SMILES-RL is a framework for comparing reinforcement learning algorithms, replay buffers and scoring functions for SMILES-based molecular *de novo* design. The framework is originally developed for recurrent neural netrworks (RNNs) but can be used with other models as well.
+SMILES-RL is a framework for comparing reinforcement learning algorithms, replay buffers and scoring functions for SMILES-based molecular *de novo* design. The framework is originally developed for recurrent neural networks (RNNs) but can be used with other models as well.
 
 ## Prerequisites
 Before you begin, ensure you have met the following requirements:
@@ -16,7 +16,7 @@ The tool has been developed on a Linux platform.
 
 ## Installation
 
-First time, execute the following comand in a console or an Anaconda prompt
+First time, execute the following command in a console or an Anaconda prompt
 
     conda env create -f SMILES-RL.yml
 
@@ -32,22 +32,25 @@ The framework currently provides a JSON-based command-line interface for compari
 
 ### Configuration file
 
-Firstly, we need to create a configuration file in [JSON format](https://en.wikipedia.org/wiki/JSON) which specifies all settings and absolute/relative paths to classes/constructors. It should contain five main sections:
-* **diversity_filter**: absolut/relative path to the diversity filter class (constructor) and corresponding parameters to use.
-* **logging**:  absolut/relative path to the logger class and corresponding parameters to use.
-*  **reinforcement_learning**: absolute/relative path to the reinfocement learning agent class and corresponding parameters to use.
+To use the framework, a configuration file in [JSON format](https://en.wikipedia.org/wiki/JSON) which specifies all settings and absolute/relative paths to classes/constructors is needed. It should contain five main sections:
+* **diversity_filter**: absolute/relative path to the diversity filter class (constructor) and corresponding parameters to use.
+* **logging**:  absolute/relative path to the logger class and corresponding parameters to use.
+*  **reinforcement_learning**: absolute/relative path to the reinforcement learning agent class and corresponding parameters to use.
 *  **replay_buffer**: absolute/relative path to the replay buffer class and corresponding parameters to use.
-*  **scoring_function**: absolut/relative path to the scoring function class (constructor) and corresponding parameters to use. 
+*  **scoring_function**: absolute/relative path to the scoring function class (constructor) and corresponding parameters to use. 
 
-Below is an example of such file using the diversity filter and scoring function of [REINVENT](https://github.com/MolecularAI/Reinvent), the **BinCurrent** replay buffer and the regularized maximum likelihood estimation agent (examples on scripts for generating configuration files are available in the directory `create_configs/`): 
+Below is an example of such file using the diversity filter and scoring function of [REINVENT](https://github.com/MolecularAI/Reinvent), the **BinCurrent** replay buffer and the regularized maximum likelihood estimation agent (examples on scripts for generating configuration files are available in the directory `create_configs/` and see executable example below): 
 
 ```json
 {
     "diversity_filter": {
         "method": "smiles_rl.diversity_filter.reinvent_diversity_filter_factory.ReinventDiversityFilterFactory",
-        "parameters": {
-            "name": "NoFilter"
-        }
+            "parameters": {
+                "name": "IdenticalMurckoScaffold", 
+                "bucket_size": 25,  
+                "minscore": 0.4,  
+                "minsimilarity": 0.35,
+            },
     },
     "logging": {
         "method": "smiles_rl.logging.reinforcement_logger.ReinforcementLogger",
@@ -64,11 +67,11 @@ Below is an example of such file using the diversity filter and scoring function
     "reinforcement_learning": {
         "method": "smiles_rl.agent.regularized_mle.RegularizedMLE",
         "parameters": {
-            "agent": "random.prior.new",
+            "agent": "pre_trained_models/ChEMBL/random.prior.new",
             "batch_size": 128,
             "learning_rate": 0.0001,
-            "n_steps": 3000,
-            "prior": "random.prior.new",
+            "n_steps": 2000,
+            "prior": "pre_trained_models/ChEMBL/random.prior.new",
             "specific_parameters": {
                 "margin_threshold": 50,
                 "sigma": 128
@@ -94,7 +97,7 @@ Below is an example of such file using the diversity filter and scoring function
                     "specific_parameters": {
                         "container_type": "scikit_container",
                         "descriptor_type": "ecfp_counts",
-                        "model_path": "predictive_model.pkl",
+                        "model_path": "predictive_models/DRD2/RF_DRD2_ecfp4c.pkl",
                         "radius": 2,
                         "scikit": "classification",
                         "size": 2048,
@@ -123,6 +126,31 @@ After we have created and saved the configuration file, here saved as `config.js
 
 ### Note on design of reinforcement learning agent
 The reinforcement learning agent, specified in section **reinforcement_learning** of the configuration file, takes an instance of scoring function, diversity filter, replay buffer or logger as input. The agent should use the given scoring function, diversity filter, replay buffer for update. Logger should be used for saving agent parameters and memory for intermediate and/or final inspection.
+
+## Example
+Below follows an executable example using a predictive model based on DRD2 data for activity prediction and which is utilizing a model pre-trained on the ChEMBL database. In this example we use proximal policy optimization (PPO) as reinforcement learning algorithm and all current (AC) as replay buffer. It uses the diversity filter and scoring function of [REINVENT](https://github.com/MolecularAI/Reinvent). Before preceding, make sure that you have followed the above installation steps. 
+
+### Train predictive model
+To create predictive model for activity prediction, run the training script
+
+    python create_DRD2_data_and_models.py --fp_counts --generate_fps
+
+which will train a random forest classifier saved to path `predictive_models/DRD2/RF_DRD2_ecfp4c.pkl`.
+
+### Create config file
+Firstly, create logging directory where the configuration file and outputs will be saved
+
+    mkdir logs
+
+Run following script to create configuration JSON-file for PPO algorithm using all current as replay buffer, the ChEMBL pre-trained model and the predictive model trained above. 
+
+    python create_configs/create_a2c_config.py --replay_buffer smiles_rl.replay_buffer.all_current.AllCurrent --log_dir logs --prior pre_trained_models/ChEMBL/random.prior.new --predictive_model predictive_models/DRD2/RF_DRD2_ecfp4c.pkl
+
+### Run experiment
+Run experiment using the created configuration file
+
+    python run.py --config ppo_config.json
+
 
 ## References
 1. Svensson, Hampus G., Tyrchan, Christian, Engkvist, Ola, and Morteza H. Chehreghani. "Utilizing Reinforcement Learning for de novo Drug Design." ArXiv, (2023).
