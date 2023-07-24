@@ -30,7 +30,7 @@ This will install the conda environment. To activate the environment and install
 The framework currently provides a JSON-based command-line interface for comparing different RL algorithms, replay buffers and scoring functions. 
 
 
-### Configuration file
+### Configuration File
 
 To use the framework, a configuration file in [JSON format](https://en.wikipedia.org/wiki/JSON) which specifies all settings and absolute/relative paths to classes/constructors is needed. It should contain five main sections:
 * **diversity_filter**: absolute/relative path to the diversity filter class (constructor) and corresponding parameters to use.
@@ -118,26 +118,26 @@ Below is an example of such file using the diversity filter and scoring function
 
 Make sure to save this in JSON format, e.g., as `config.json`
 
-### Running from the command line
+### Running From the Command Line
 
 After we have created and saved the configuration file, here saved as `config.json`, we can run it by
 
     python run.py --config config.json
 
-### Note on design of reinforcement learning agent
+### Note on Design of Reinforcement Learning Agent
 The reinforcement learning agent, specified in section **reinforcement_learning** of the configuration file, takes an instance of scoring function, diversity filter, replay buffer or logger as input. The agent should use the given scoring function, diversity filter, replay buffer for update. Logger should be used for saving agent parameters and memory for intermediate and/or final inspection.
 
 ## Example
 Below follows an executable example using a predictive model based on DRD2 data for activity prediction and which is utilizing a model pre-trained on the ChEMBL database. In this example we use proximal policy optimization (PPO) as reinforcement learning algorithm and all current (AC) as replay buffer. It uses the diversity filter and scoring function of [REINVENT](https://github.com/MolecularAI/Reinvent). Before preceding, make sure that you have followed the above installation steps. 
 
-### Train predictive model
+### Train Predictive Model
 To create predictive model for activity prediction, run the training script
 
     python create_DRD2_data_and_models.py --fp_counts --generate_fps
 
 which will train a random forest classifier saved to path `predictive_models/DRD2/RF_DRD2_ecfp4c.pkl`.
 
-### Create config file
+### Create Config File
 Firstly, create logging directory where the configuration file and outputs will be saved
 
     mkdir logs
@@ -146,11 +146,22 @@ Run following script to create configuration JSON-file for PPO algorithm using a
 
     python create_configs/create_a2c_config.py --replay_buffer smiles_rl.replay_buffer.all_current.AllCurrent --log_dir logs --prior pre_trained_models/ChEMBL/random.prior.new --predictive_model predictive_models/DRD2/RF_DRD2_ecfp4c.pkl
 
-### Run experiment
+### Run Experiment
 Run experiment using the created configuration file
 
     python run.py --config ppo_config.json
 
+
+## Current Agents and Replay Buffers
+List of current agents and replay buffer combinations.
+
+| RL Algo  | All Current        | Bin Current        | Top-Bottom Current | Top Current        | Top History        | Top-Bottom History | Bin History        |
+| -------- | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ |
+| A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| ACER     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | N/A                | N/A                | N/A                |
+| PPO      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Reg. MLE | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | N/A                | N/A                | N/A                |
 
 ## References
 1. Svensson, Hampus G., Tyrchan, Christian, Engkvist, Ola, and Morteza H. Chehreghani. "Utilizing Reinforcement Learning for de novo Drug Design." ArXiv, (2023).
