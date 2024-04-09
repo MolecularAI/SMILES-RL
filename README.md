@@ -144,7 +144,7 @@ Firstly, create logging directory where the configuration file and outputs will 
 
 Run following script to create configuration JSON-file for PPO algorithm using all current as replay buffer, the ChEMBL pre-trained model and the predictive model trained above. 
 
-    python create_configs/create_a2c_config.py --replay_buffer smiles_rl.replay_buffer.all_current.AllCurrent --log_dir logs --prior pre_trained_models/ChEMBL/random.prior.new --predictive_model predictive_models/DRD2/RF_DRD2_ecfp4c.pkl
+    python create_configs/create_ppo_config.py --replay_buffer smiles_rl.replay_buffer.all_current.AllCurrent --log_dir logs --prior pre_trained_models/ChEMBL/random.prior.new --predictive_model predictive_models/DRD2/RF_DRD2_ecfp4c.pkl
 
 ### Run Experiment
 Run experiment using the created configuration file
