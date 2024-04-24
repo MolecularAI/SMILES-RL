@@ -133,7 +133,7 @@ Below follows an executable example using a predictive model based on DRD2 data 
 ### Train Predictive Model
 To create predictive model for activity prediction, run the training script
 
-    python create_DRD2_data_and_models.py --fp_counts --generate_fps
+    python predictive_models/DRD2/create_DRD2_data_and_models.py --fp_counts --generate_fps
 
 which will train a random forest classifier saved to path `predictive_models/DRD2/RF_DRD2_ecfp4c.pkl`.
 
