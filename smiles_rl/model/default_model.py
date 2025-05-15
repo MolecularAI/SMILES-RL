@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Iterable
 import numpy as np
 import torch
 import torch.nn as tnn
@@ -113,7 +113,14 @@ class DefaultModel:
 
         return padded_sequences.to("cuda")
 
-    def likelihood_smiles(self, smiles) -> torch.Tensor:
+    def likelihood_smiles(self, smiles: Iterable) -> torch.Tensor:
+        """
+        Retrieves the (negative log) likelihood of a given Iterable of SMILES.
+
+        :param sequences: (batch_size) A batch of SMILES
+        :return:  (batch_size) negative Log likelihood for each example.
+        """
+
         tokens = [self.tokenizer.tokenize(smile) for smile in smiles]
         encoded = [self.vocabulary.encode(token) for token in tokens]
         sequences = [torch.tensor(encode, dtype=torch.long) for encode in encoded]

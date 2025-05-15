@@ -275,6 +275,36 @@ class ActorModel:
 
         return log_probs, probs
 
+    def log_and_probabilities_action(self, sequences: torch.Tensor):
+        """
+        Retrieves the log probabilities and probabilities of taken actions given sequence.
+
+        :param sequences: (batch_size, sequence_length) A batch of sequences
+        :return:  (batch_size, sequence_length-1) Log probabilities for action in sequence.
+                (batch_size, sequence_length-1) Probabilities for action in sequence.
+        """
+
+        # Excluding last token for consistency
+        seqs = sequences[:, :-1]
+
+        logits, _ = self.network(seqs, None)  # all steps done at once
+
+        log_probs = logits.log_softmax(dim=-1)
+        probs = logits.softmax(dim=-1)
+
+        log_probs = torch.gather(log_probs, -1, sequences[:, 1:].unsqueeze(-1)).squeeze(
+            -1
+        )
+
+        probs = torch.gather(probs, -1, sequences[:, 1:].unsqueeze(-1)).squeeze(-1)
+
+        assert log_probs.size() == (
+            sequences.size(0),
+            sequences.size(1) - 1,
+        ), f"log probs {log_probs.size()}, correct {(sequences.size(0),sequences.size(1))}"
+
+        return log_probs, probs
+
     def probabilities(self, sequences: torch.Tensor):
         """
         Retrieves the probabilities of all actions given sequence.

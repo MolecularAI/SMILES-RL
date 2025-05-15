@@ -9,12 +9,14 @@ from reinvent_scoring import ComponentSpecificParametersEnum
 from reinvent_scoring.scoring.diversity_filters.reinvent_core.base_diversity_filter import (
     BaseDiversityFilter,
 )
-from ..configuration_envelope import ConfigurationEnvelope
-from .reinforcement_log_configuration import ReinforcementLoggerConfiguration
 from reinvent_scoring.scoring.score_summary import FinalSummary
 from reinvent_scoring.scoring.enums.scoring_function_component_enum import (
     ScoringFunctionComponentNameEnum,
 )
+
+
+from ..configuration_envelope import ConfigurationEnvelope
+from .reinforcement_log_configuration import ReinforcementLoggerConfiguration
 
 
 class BaseReinforcementLogger(ABC):

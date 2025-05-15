@@ -99,7 +99,7 @@ def _create_json_config(
     if use_diversity_filter:
         # add a "diversity_filter"
         configuration["diversity_filter"] = {
-            "method": "smiles_rl.diversity_filter.reinvent_diversity_filter_factory.ReinventDiversityFilterFactory",
+            "method": "smiles_rl.diversity_filter.diversity_filter_factory.DiversityFilterFactory",
             "parameters": {
                 "name": "IdenticalMurckoScaffold",  # other options are: "IdenticalTopologicalScaffold",
                 #                    "NoFilter" and "ScaffoldSimilarity"
@@ -111,7 +111,7 @@ def _create_json_config(
         }
     else:
         configuration["diversity_filter"] = {
-            "method": "smiles_rl.diversity_filter.reinvent_diversity_filter_factory.ReinventDiversityFilterFactory",
+            "method": "smiles_rl.diversity_filter.diversity_filter_factory.DiversityFilterFactory",
             "parameters": {
                 "name": "NoFilter",
             },

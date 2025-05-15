@@ -7,7 +7,7 @@ from smiles_rl.configuration_envelope import ConfigurationEnvelope
 from typing import Optional, Dict, Type, Any
 
 
-from smiles_rl.utils.general import set_default_device_cuda
+from smiles_rl.utils.general import _set_torch_device
 
 
 import importlib
@@ -217,7 +217,7 @@ def _construct_run(config: ConfigurationEnvelope) -> BaseAgent:
     """
 
     # Set default device of pytorch tensors to cuda
-    set_default_device_cuda()
+    device = _set_torch_device("cuda")
 
     logger = _construct_logger(config)
     scoring_function = _construct_scoring_function(config)

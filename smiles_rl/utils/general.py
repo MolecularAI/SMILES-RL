@@ -9,12 +9,32 @@ from typing import Union, Dict
 def to_tensor(tensor: Union[torch.Tensor, np.ndarray]) -> torch.Tensor:
     """Converts numpy ndarray to tensor and/or puts to GPU if available"""
 
-    if isinstance(tensor, np.ndarray):
-        tensor = torch.from_numpy(tensor)
-
     if torch.cuda.is_available():
-        return tensor.cuda()
+        current_device = torch.device("cuda")
+    else:
+        current_device = torch.device("cpu")
+
+    # if isinstance(tensor, np.ndarray):
+    tensor = torch.as_tensor(tensor, device=current_device)
+
     return tensor
+
+
+def _set_torch_device(device: str = None):
+    """Set the Torch device
+
+    :param args_device: device name from the command line
+    :param device: device name from the config
+    """
+
+    if device:
+        torch.set_default_device(device)
+        actual_device = torch.device(device)
+    else:  # we assume there are no other devices...
+        torch.set_default_device("cpu")
+        actual_device = torch.device("cpu")
+
+    return actual_device
 
 
 def set_default_device_cuda():

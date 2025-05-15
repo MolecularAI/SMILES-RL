@@ -1,6 +1,7 @@
 """
 Implementation of the RNN model
 """
+
 import torch
 import torch.nn as tnn
 import torch.nn.functional as tnnf
@@ -135,3 +136,13 @@ class RNN(tnn.Module):
             "cell_type": self._cell_type,
             "embedding_layer_size": self._embedding_layer_size,
         }
+
+    def freeze_pretrained_layers(self):
+        """
+        Freezing the parameters of the embedding and RNN layers, to only train the linear layer.
+        """
+        for param in self._embedding.parameters():
+            param.requires_grad = False
+
+        for param in self._rnn.parameters():
+            param.requires_grad = False

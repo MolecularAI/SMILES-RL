@@ -72,8 +72,7 @@ class BaseAgent(metaclass=ABCMeta):
     def log_out(
         self,
     ) -> None:
-        """Optional model that is called when generation is finished, e.g., for saving
+        """Optional method that is called when generation is finished, e.g., for saving
         model parameters and memory of sampled molecules (molecules are not saved otherwise for inspection)
         """
-
         pass

@@ -42,7 +42,6 @@ class SAC(BaseAgent):
 
         self.config = config.reinforcement_learning.parameters
 
-        # TODO: Maybe can remove use of self.device, since default device is cuda
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.n_updates_off_policy = self.config.specific_parameters.get(

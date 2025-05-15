@@ -42,7 +42,6 @@ class ACER(BaseAgent):
         self._logger = logger
 
         self.config = config.reinforcement_learning.parameters
-        # TODO: Maybe can remove use of self.device, since default device is cuda
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device {self.device}")
 
@@ -167,17 +166,14 @@ class ACER(BaseAgent):
             actor_loss = 0.0
 
             # Put samples in replay buffer, including the current action probabilities
-            print("Using sampler", flush=True)
             self._replay_buffer.put_probs(smiles, score, probs.cpu().numpy(), seqs)
 
             n_updates_off_policy = (
                 self.rng.poisson(self.replay_ratio) if self.step > 10 else 0
             )
-            print(n_updates_off_policy, flush=True)
 
             # Off-policy updates
-            for i_update in range(n_updates_off_policy):
-                print(f"Step {self.step}, update {i_update}", flush=True)
+            for _ in range(n_updates_off_policy):
 
                 # Sample from replay buffer, including corresponding probabilities
                 (
@@ -286,7 +282,6 @@ class ACER(BaseAgent):
 
         # Truncated importance sampling
         # g ← min(c, ρ_a_i)∙∇θ∙log(π(a_i|s_i; θ))∙A
-        # TODO: skip start token since we do not want to update its probability
         adv = q_ret - v  # [batch_size, seq_len-1]
         log_pi_a = torch.log(pi_a + self.eps)
         gain_pi = rho_a.clamp(max=self.c) * log_pi_a * adv
@@ -330,7 +325,7 @@ class ACER(BaseAgent):
             g_adj = (
                 rho_a.clamp(max=self.c) * (q_ret - v) / (pi_a + self.eps)
             )  # [batch_size, seq_len-1]
-            print(f"g_adj: {g_adj}")
+
             g = torch.zeros_like(q)
 
             for i in range(g.size(0)):
